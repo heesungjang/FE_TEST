@@ -16,6 +16,7 @@ const Header = () => {
 
 // 회사명 + 로고 콘테이너 스타일 컴포넌트
 const HeaderContainer = styled.div`
+    margin-bottom: 25px;
     padding: 10px 20px;
     border-bottom: ${({ theme }) => `2px solid ${theme.color.gray}`};
 `;
