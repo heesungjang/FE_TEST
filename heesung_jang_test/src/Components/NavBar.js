@@ -4,48 +4,91 @@ import textProps from "../styles/textStyle"; // 텍스트 스타일 mixin 함수
 
 //네비게이션 컴포넌트
 const NavBar = () => {
-    const [selectedButton, setSelectedButton] = useState("Result");
+    const projectTitle = "Project name";
+    const [selectedButton, setSelectedButton] = useState("result");
 
     // 버튼 클릭 핸들러
-    const handleButtonClick = () => {};
+    const handleButtonClick = (event) => {
+        const {
+            target: { name: selectedButton },
+        } = event;
+        if (selectedButton) {
+            setSelectedButton(selectedButton);
+        }
+    };
     return (
-        <NavBarContainer>
-            <ButtonContainer>
-                <NavButton name="alpha" onClick={handleButtonClick}>
-                    Alpha
-                </NavButton>
-                <NavButton name="bravo" onClick={handleButtonClick}>
-                    Bravo
-                </NavButton>
-                <NavButton name="charlie" onClick={handleButtonClick}>
-                    Charlie
-                </NavButton>
-                <NavButton name="delta" onClick={handleButtonClick}>
-                    Delta
-                </NavButton>
-                <NavButton name="echo" onClick={handleButtonClick}>
-                    Echo
-                </NavButton>
-                <NavButton name="result" onClick={handleButtonClick}>
-                    Result
-                </NavButton>
-            </ButtonContainer>
-        </NavBarContainer>
+        <>
+            <ProjectTitle>{projectTitle}</ProjectTitle>
+            <NavBarContainer>
+                <ButtonContainer>
+                    <NavButton
+                        name="alpha"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Alpha
+                    </NavButton>
+                    <NavButton
+                        name="bravo"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Bravo
+                    </NavButton>
+                    <NavButton
+                        name="charlie"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Charlie
+                    </NavButton>
+                    <NavButton
+                        name="delta"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Delta
+                    </NavButton>
+                    <NavButton
+                        name="echo"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Echo
+                    </NavButton>
+                    <NavButton
+                        name="result"
+                        selectedButton={selectedButton}
+                        onClick={handleButtonClick}
+                    >
+                        Result
+                    </NavButton>
+                </ButtonContainer>
+            </NavBarContainer>
+        </>
     );
 };
 
+// 프로젝트 타이틀
+const ProjectTitle = styled.span`
+    margin: 0 0 15px 50px;
+    display: inline-block;
+    ${textProps(20, "semiBold", "green")};
+`;
 // 네이게이션 컴포넌트 메인 컨테이너 div
 const NavBarContainer = styled.div`
     margin: 0 50px;
     padding: 20px 50px;
-    border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 6px;
+    min-width: 450px;
 `;
 // 네비게이션 버튼 컨테이너 div
 const ButtonContainer = styled.div`
     width: 60%;
     display: flex;
     justify-content: space-between;
+    min-width: 350px;
 `;
 // 네비게이션 버튼
 const NavButton = styled.button`
@@ -54,7 +97,12 @@ const NavButton = styled.button`
     :hover {
         transform: translate(0px, -3px);
     }
-    ${(props) => textProps(18, "regular", "black")}
+    ${({ theme, name, selectedButton }) =>
+        textProps(
+            18,
+            "regular",
+            `${name === selectedButton ? "green" : "darkGray"}`
+        )};
 `;
 
 export default NavBar;

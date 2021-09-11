@@ -14,6 +14,7 @@ const color = {
     purple: "#a29bfe",
     black: "#292b2d",
     gray: "#dfe6e9",
+    darkGray: "#636e72",
 };
 
 // 테스트 프로젝트서 사용되는 폰트 사이즈
