@@ -12,6 +12,7 @@ const fontWeight = {
 const color = {
     green: "#00b894",
     purple: "#a29bfe",
+    darkPurple: "#6c5ce7",
     black: "#292b2d",
     gray: "#dfe6e9",
     darkGray: "#636e72",
@@ -21,8 +22,10 @@ const color = {
 const fontSize = {
     12: calRem(12),
     14: calRem(14),
+    16: calRem(18),
     18: calRem(18),
     20: calRem(20),
+    30: calRem(30),
     45: calRem(45),
 };
 

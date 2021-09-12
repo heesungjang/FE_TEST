@@ -77,7 +77,7 @@ const ProjectTitle = styled.span`
 `;
 // 네이게이션 컴포넌트 메인 컨테이너 div
 const NavBarContainer = styled.div`
-    margin: 0 50px 80px 50px;
+    margin: 0 50px 60px 50px;
     padding: 20px 50px;
     border-radius: 12px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 6px;
