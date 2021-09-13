@@ -8,7 +8,7 @@ import ResultTable from "../Components/ResultTable";
 
 const Result = (props) => {
     const [resultList, setResultList] = useState([]); // result List state 값
-    const [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState([]); // 검색 결과 값
     const [searchTerm, setSearchTerm] = useState(""); // 검색 input 입력 값 control state
     const [isFetching, setIsFetching] = useState(false); // 데이터 요청이 끝났는지 판별하는 boolean 값
     const [checkedState, setCheckedState] = useState([]); // SubRow 선택 판별 배열 값
