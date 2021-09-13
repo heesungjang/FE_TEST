@@ -8,10 +8,7 @@ import { testApi } from "../shared/api";
 
 const ResultTable = ({ resultList, handleSelectSubRow, checkedState }) => {
     const [isFetching, setIsFetching] = useState(false); // data 요청중  판별 값
-    const [selectedNameIdx, setSelectedNameIdx] = useState(null); // 클릭한 Name의 인덱스 값
-    const [selectedName, setSelectedName] = useState(""); // 클리한 Name 값
     const [subData, setSubData] = useState([]); // SubRow 데이터 배열
-
     const [showSubRow, setShowSubRow] = useState(null);
 
     // 서브 테이블 데이터 요청 함수
