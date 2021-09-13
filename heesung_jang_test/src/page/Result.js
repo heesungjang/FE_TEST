@@ -13,6 +13,8 @@ const Result = (props) => {
     const [isFetching, setIsFetching] = useState(false); // 데이터 요청이 끝났는지 판별하는 boolean 값
     const [checkedState, setCheckedState] = useState([]); // SubRow 선택 판별 배열 값
 
+    const [sortBy, setSortBy] = useState(true);
+
     // 전체 결과 (result) 서버 데이터 요청  함수
     const getResults = async () => {
         if (isFetching) {
@@ -81,7 +83,6 @@ const Result = (props) => {
             (row) =>
                 row.name === e.target.value && row.selectedRow === e.target.id
         );
-        console.log(filter);
         if (filter !== undefined) {
             setCheckedState(checkedState.filter((row) => row !== filter));
             return;
@@ -118,7 +119,6 @@ const Result = (props) => {
         let store = [];
         subData.forEach((row) => {
             row?.data.forEach((subRow, idx) => {
-                console.log(row);
                 store.push({
                     name: row.name,
                     selectedRow: `${idx + 1}`,
@@ -128,6 +128,49 @@ const Result = (props) => {
         });
     };
 
+    const handleSortByFoxtrot = (sortBy) => {
+        console.log(sortBy);
+
+        setResultList((prev) => [...prev.sort(sortFunction)]);
+
+        function sortFunction(a, b) {
+            setSortBy(!sortBy);
+            if (sortBy) {
+                if (a[1] === b[1]) {
+                    return 0;
+                } else {
+                    return a[1] < b[1] ? -1 : 1;
+                }
+            } else {
+                if (a[1] === b[1]) {
+                    return 0;
+                } else {
+                    return a[1] > b[1] ? -1 : 1;
+                }
+            }
+        }
+    };
+
+    const handleSortByGolf = (sortBy) => {
+        setResultList((prev) => [...prev.sort(sortFunction)]);
+        function sortFunction(a, b) {
+            setSortBy(!sortBy);
+            if (sortBy) {
+                if (a[2] === b[2]) {
+                    return 0;
+                } else {
+                    return a[2] < b[2] ? -1 : 1;
+                }
+            } else {
+                if (a[2] === b[2]) {
+                    return 0;
+                } else {
+                    return a[2] > b[2] ? -1 : 1;
+                }
+            }
+        }
+    };
+
     // 랜더링시 항상 getResult 함수를 실행, 전체 result 값을 받아온다.
     useEffect(() => {
         getResults();
@@ -135,6 +178,7 @@ const Result = (props) => {
 
     return (
         <LayoutContainer>
+            {console.log(resultList)}
             <SearchBoxContainer>
                 <Title>Result</Title>
                 <UnitContainer>
@@ -181,6 +225,9 @@ const Result = (props) => {
                 checkedState={checkedState}
                 handleResetSelection={handleResetSelection}
                 handleSelectAll={handleSelectAll}
+                handleSortByFoxtrot={handleSortByFoxtrot}
+                handleSortByGolf={handleSortByGolf}
+                sortBy={sortBy}
             />
         </LayoutContainer>
     );

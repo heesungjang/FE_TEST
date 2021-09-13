@@ -6,12 +6,17 @@ import textProps from "../styles/textStyle";
 import { outline } from "../styles/borderStyle";
 import { testApi } from "../shared/api";
 
+import ImportExportIcon from "@material-ui/icons/ImportExport";
+
 const ResultTable = ({
     resultList,
     handleSelectSubRow,
     checkedState,
     handleResetSelection,
     handleSelectAll,
+    handleSortByFoxtrot,
+    handleSortByGolf,
+    sortBy,
 }) => {
     const [isFetching, setIsFetching] = useState(false); // data 요청중  판별 값
     const [subData, setSubData] = useState([]); // SubRow 데이터 배열
@@ -62,12 +67,29 @@ const ResultTable = ({
     };
     return (
         <Table>
-            {console.log(checkedState)}
             <thead>
                 <TableTitleRow>
                     <TableHeader>Name</TableHeader>
-                    <TableHeader>Foxtrot</TableHeader>
-                    <TableHeader>Golf</TableHeader>
+                    <TableHeader>
+                        Foxtrot
+                        <ImportExportIcon
+                            fontSize="small"
+                            style={{
+                                cursor: "pointer",
+                            }}
+                            onClick={() => handleSortByFoxtrot(sortBy)}
+                        />
+                    </TableHeader>
+                    <TableHeader>
+                        Golf
+                        <ImportExportIcon
+                            fontSize="small"
+                            style={{
+                                cursor: "pointer",
+                            }}
+                            onClick={() => handleSortByGolf(sortBy)}
+                        />
+                    </TableHeader>
                 </TableTitleRow>
             </thead>
             <tbody>
