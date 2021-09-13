@@ -6,13 +6,13 @@ import textProps from "../styles/textStyle";
 import { outline } from "../styles/borderStyle";
 import { testApi } from "../shared/api";
 
-const ResultTable = ({ resultList, handleSelectSubRow, setCheckedState }) => {
+const ResultTable = ({ resultList, handleSelectSubRow, checkedState }) => {
     const [isFetching, setIsFetching] = useState(false); // data 요청중  판별 값
     const [selectedNameIdx, setSelectedNameIdx] = useState(null); // 클릭한 Name의 인덱스 값
     const [selectedName, setSelectedName] = useState(""); // 클리한 Name 값
     const [subData, setSubData] = useState([]); // SubRow 데이터 배열
 
-    // const [checkedState, setCheckedState] = useState([]); // SubRow 선택 판별 배열 값
+    const [showSubRow, setShowSubRow] = useState(null);
 
     // 서브 테이블 데이터 요청 함수
     const handleSubTableReq = async (e) => {
@@ -21,22 +21,17 @@ const ResultTable = ({ resultList, handleSelectSubRow, setCheckedState }) => {
         // 이름 클릭시 name attribute 값 저장
         const name = e.target.getAttribute("name");
 
-        if (selectedName === "") {
-            setSelectedName(name);
-            setSelectedNameIdx(id);
+        if (showSubRow === id) {
+            setShowSubRow(null);
+        } else {
+            setShowSubRow(id);
         }
 
-        if (selectedName === name && selectedNameIdx === id) {
-            setSubData([]);
-            setSelectedName("");
-            setSelectedNameIdx(null);
+        let filter = subData.filter(
+            (dataSet) => dataSet.name === name && dataSet.id === id
+        );
+        if (filter.length > 0) {
             return;
-        }
-
-        if (selectedName !== name && selectedNameIdx !== id) {
-            setSubData([]);
-            setSelectedNameIdx(id);
-            setSelectedName(name);
         }
 
         if (isFetching === false) {
@@ -44,9 +39,14 @@ const ResultTable = ({ resultList, handleSelectSubRow, setCheckedState }) => {
                 setIsFetching(true);
                 await testApi.getResult(name).then((res) => {
                     if (res.status === 200) {
-                        setSubData(res.data);
-                        setCheckedState(new Array(res.data.length).fill(false));
-                        console.log(res.data);
+                        setSubData([
+                            ...subData,
+                            {
+                                id: id,
+                                name: name,
+                                data: [...res.data],
+                            },
+                        ]);
                     }
                 });
                 setIsFetching(false);
@@ -81,28 +81,33 @@ const ResultTable = ({ resultList, handleSelectSubRow, setCheckedState }) => {
                                 <TableCell>{result[1].toFixed(5)}</TableCell>
                                 <TableCell>{result[2].toFixed(5)}</TableCell>
                             </TableRow>
-                            {subData.length > 0 &&
-                                selectedName === result[0] &&
-                                selectedNameIdx === idx && (
-                                    <>
-                                        <SubTableRow>
-                                            <SubTableCell>id</SubTableCell>
-                                            <SubTableCell>Foxtrot</SubTableCell>
-                                            <SubTableCell>Golf</SubTableCell>
-                                        </SubTableRow>
-                                        {subData.map((subRow, idx) => (
+                            {showSubRow === idx && subData.length > 0 && (
+                                <>
+                                    <SubTableRow>
+                                        <SubTableCell>id</SubTableCell>
+                                        <SubTableCell>Foxtrot</SubTableCell>
+                                        <SubTableCell>Golf</SubTableCell>
+                                    </SubTableRow>
+                                    {subData
+                                        .find(
+                                            (dataSet) =>
+                                                dataSet.name === result[0]
+                                        )
+                                        ?.data.map((subRow, idx) => (
                                             <SubTableRow key={idx}>
                                                 <SubTableCell>
                                                     <div>
                                                         <Checkbox
                                                             type="checkbox"
-                                                            value={subRow[0]}
-                                                            onChange={() =>
+                                                            id={idx + 1}
+                                                            value={result[0]}
+                                                            onChange={(e) =>
                                                                 handleSelectSubRow(
-                                                                    idx
+                                                                    e
                                                                 )
                                                             }
                                                         />
+
                                                         <ID>{subRow[0]}</ID>
                                                     </div>
                                                 </SubTableCell>
@@ -114,8 +119,8 @@ const ResultTable = ({ resultList, handleSelectSubRow, setCheckedState }) => {
                                                 </SubTableCell>
                                             </SubTableRow>
                                         ))}
-                                    </>
-                                )}
+                                </>
+                            )}
                         </React.Fragment>
                     ))}
             </tbody>
@@ -178,7 +183,7 @@ const Checkbox = styled.input``;
 ResultTable.propTypes = {
     resultList: PropTypes.array,
     handleSelectSubRow: PropTypes.func,
-    setCheckedState: PropTypes.func,
+    checkedState: PropTypes.array,
 };
 
 export default ResultTable;
