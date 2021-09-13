@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# HITS 프론트엔드 과제 - 장희성
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 개요
 
-## Available Scripts
+기간 : 2021-07-23 ~ 2021-09-03 (43일) <br/>
 
-In the project directory, you can run:
+HITS 프론트엔드 채용 과제 전형 프로젝트 <br/>
 
-### `yarn start`
+github 주소: https://github.com/heesungjang/FE_TEST
+<br/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# 💻 사용기술
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+-   React
+-   상태관리 : Hooks(useState)
+-   통신 : Axios
+-   스타일 : styled-components (theme-provider, createGlobalStyle)
 
-### `yarn test`
+> 라이브러리
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   axios
+-   prop-types
+-   styled components
 
-### `yarn build`
+<br/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# 💡 과제 요구 사항 (필수)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+-   1.페이지에 들어오면 바로 `/result/` api를 호출해서 테이블을 구성
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-   2.스크롤시 Result 타이틀은 고정.
 
-### `yarn eject`
+-   3.소수는 반올림해서 5번째자리까지 표현.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+-   4.각 column옆 버튼을 누르면, 해당 column 기준으로 오름차순, 내림차순 정렬.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+-   5.각 row(이하 main row)에서 name을 선택하면 /result/{name}/api를 호출해서 서브테이블을 구성
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+-   6.서브테이블에서 각 row(이하 sub row)를 선택하면 현재 선택된 아이템들을 알 수 구현.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-   7.선택된 아이템 옆 x버튼을 누르면 선택에서 제외
 
-## Learn More
+-   8.여러 main row들의 서브테이블에서 선택할 수 있게 구현.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+-   9.검색 창에 name을 넣으면 해당 name에 해당하는 값이 출력되게 구현
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+-   10.검색한 name에서 아이템들을 추가할 수 있게 해주세요. (5와 동일)
 
-### Code Splitting
+-   11.여러 번 검색해서 계속해서 추가할 수 있게 해주세요. (이전에 검색해서 추가한 아이템들이 사라지지 않도록)
+    <br/>
+    <br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# ❌ 과제 구현하지 못했어요
 
-### Analyzing the Bundle Size
+## 1. Input (type-checkbox) - checked 값 컨트롤
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Main-row의 Name을 클릭하면 해당 row의 하위 sub-row 데이터를 불러와 서브 테이블을 구성. 서브 테이블 각각의 아이템을 선택하면 viewport 상단에 현재 선택된 아이템을 보여주고 있다. 선택하는 클릭 action과 해당 아이템이 선택되었는지 checkbox로 구현하면 직관적일꺼라 판단.
 
-### Making a Progressive Web App
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+여기서 문가 발생. 현재 checkbox의 선택 여부(체크 표시) 상태 값인 checked 속성 값을 지정하지 않아 아래와 같이 다른 서브테이블의 Name을 선택하고 돌아오면 checkbox가 풀려있는 오류를 발생.
 
-### Advanced Configuration
+> hooks(useState)을 통한 문제 해결 시도
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+checkbox의 checked 여부를 판단할 수 있는 boolean 값을 상태 값으로 관리하려고 했으나
