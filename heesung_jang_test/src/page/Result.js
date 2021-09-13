@@ -77,11 +77,11 @@ const Result = (props) => {
 
     // sub row 데이터 선택 헨들러
     const handleSelectSubRow = (e) => {
-        console.log(e.target);
         const filter = checkedState.find(
             (row) =>
                 row.name === e.target.value && row.selectedRow === e.target.id
         );
+        console.log(filter);
         if (filter !== undefined) {
             setCheckedState(checkedState.filter((row) => row !== filter));
             return;
@@ -109,22 +109,21 @@ const Result = (props) => {
     };
 
     // sub row clear 버튼  헨들러
-    const handleResetSelection = () => {
-        setCheckedState([]);
+    const handleResetSelection = (name) => {
+        setCheckedState((prev) => prev.filter((row) => row.name !== name));
     };
 
     // 전체 선택 버튼 헨들러
     const handleSelectAll = (subData) => {
+        let store = [];
         subData.forEach((row) => {
             row?.data.forEach((subRow, idx) => {
                 console.log(row);
-                setCheckedState((prev) => [
-                    ...prev,
-                    {
-                        name: row.name,
-                        selectedRow: idx + 1,
-                    },
-                ]);
+                store.push({
+                    name: row.name,
+                    selectedRow: `${idx + 1}`,
+                });
+                setCheckedState(store);
             });
         });
     };

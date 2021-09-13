@@ -112,6 +112,20 @@ const ResultTable = ({
                                                                     e
                                                                 )
                                                             }
+                                                            checked={
+                                                                checkedState.find(
+                                                                    (row) =>
+                                                                        row.name ===
+                                                                            result[0] &&
+                                                                        parseInt(
+                                                                            row.selectedRow
+                                                                        ) ===
+                                                                            idx +
+                                                                                1
+                                                                )
+                                                                    ?.selectedRow ===
+                                                                `${idx + 1}`
+                                                            }
                                                         />
 
                                                         <ID>{subRow[0]}</ID>
@@ -125,6 +139,7 @@ const ResultTable = ({
                                                 </SubTableCell>
                                             </SubTableRow>
                                         ))}
+
                                     <CheckboxUtilContainer>
                                         <UtilButton
                                             isClear={false}
@@ -136,7 +151,9 @@ const ResultTable = ({
                                         </UtilButton>
                                         <UtilButton
                                             isClear={true}
-                                            onClick={handleResetSelection}
+                                            onClick={() =>
+                                                handleResetSelection(result[0])
+                                            }
                                         >
                                             clear
                                         </UtilButton>
