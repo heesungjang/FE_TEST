@@ -113,6 +113,22 @@ const Result = (props) => {
         setCheckedState([]);
     };
 
+    // 전체 선택 버튼 헨들러
+    const handleSelectAll = (subData) => {
+        subData.forEach((row) => {
+            row?.data.forEach((subRow, idx) => {
+                console.log(row);
+                setCheckedState((prev) => [
+                    ...prev,
+                    {
+                        name: row.name,
+                        selectedRow: idx + 1,
+                    },
+                ]);
+            });
+        });
+    };
+
     // 랜더링시 항상 getResult 함수를 실행, 전체 result 값을 받아온다.
     useEffect(() => {
         getResults();
@@ -165,6 +181,7 @@ const Result = (props) => {
                 setCheckedState={setCheckedState}
                 checkedState={checkedState}
                 handleResetSelection={handleResetSelection}
+                handleSelectAll={handleSelectAll}
             />
         </LayoutContainer>
     );

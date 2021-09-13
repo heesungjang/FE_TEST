@@ -11,6 +11,7 @@ const ResultTable = ({
     handleSelectSubRow,
     checkedState,
     handleResetSelection,
+    handleSelectAll,
 }) => {
     const [isFetching, setIsFetching] = useState(false); // data 요청중  판별 값
     const [subData, setSubData] = useState([]); // SubRow 데이터 배열
@@ -125,7 +126,12 @@ const ResultTable = ({
                                             </SubTableRow>
                                         ))}
                                     <CheckboxUtilContainer>
-                                        <UtilButton isClear={false}>
+                                        <UtilButton
+                                            isClear={false}
+                                            onClick={() =>
+                                                handleSelectAll(subData)
+                                            }
+                                        >
                                             check all
                                         </UtilButton>
                                         <UtilButton
