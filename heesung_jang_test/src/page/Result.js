@@ -10,14 +10,14 @@ const Result = (props) => {
     const [resultList, setResultList] = useState([]); // result List state 값
     const [searchResult, setSearchResult] = useState([]);
     const [searchTerm, setSearchTerm] = useState(""); // 검색 input 입력 값 control state
-
     const [isFetching, setIsFetching] = useState(false); // 데이터 요청이 끝났는지 판별하는 boolean 값
-    const [errorMessage, setErrorMessage] = useState(""); // 서버 통신 에러 메세지
-
     const [checkedState, setCheckedState] = useState([]); // SubRow 선택 판별 배열 값
 
     // 전체 결과 (result) 서버 데이터 요청  함수
     const getResults = async () => {
+        if (isFetching) {
+            return;
+        }
         try {
             setIsFetching(true);
             await testApi.getAllResults().then((res) => {
@@ -28,7 +28,6 @@ const Result = (props) => {
             setIsFetching(false);
         } catch (error) {
             // 에러 메세지가 있다면 setErrorMessage()로 예외처리
-            setErrorMessage("요청 실패");
             window.alert("데이터 요청 실패");
         }
     };
@@ -78,6 +77,7 @@ const Result = (props) => {
 
     // sub row 데이터 선택 헨들러
     const handleSelectSubRow = (e) => {
+        console.log(e.target);
         const filter = checkedState.find(
             (row) =>
                 row.name === e.target.value && row.selectedRow === e.target.id
@@ -91,7 +91,6 @@ const Result = (props) => {
                 {
                     name: e.target.value,
                     selectedRow: e.target.id,
-                    selected: true,
                 },
             ]);
         }
@@ -109,6 +108,11 @@ const Result = (props) => {
         }
     };
 
+    // sub row clear 버튼  헨들러
+    const handleResetSelection = () => {
+        setCheckedState([]);
+    };
+
     // 랜더링시 항상 getResult 함수를 실행, 전체 result 값을 받아온다.
     useEffect(() => {
         getResults();
@@ -117,7 +121,6 @@ const Result = (props) => {
     return (
         <LayoutContainer>
             <SearchBoxContainer>
-                {console.log(checkedState)}
                 <Title>Result</Title>
                 <UnitContainer>
                     <SearchUnit>
@@ -140,7 +143,7 @@ const Result = (props) => {
                 )}
                 {checkedState.length > 0 &&
                     checkedState.map((row, idx) => (
-                        <SubRowSelectionContainer>
+                        <SubRowSelectionContainer key={idx}>
                             <SelectedRowItem>{`${row.name} - ${row.selectedRow}`}</SelectedRowItem>
                             <DeleteButton
                                 onClick={() =>
@@ -161,6 +164,7 @@ const Result = (props) => {
                 handleSelectSubRow={handleSelectSubRow}
                 setCheckedState={setCheckedState}
                 checkedState={checkedState}
+                handleResetSelection={handleResetSelection}
             />
         </LayoutContainer>
     );

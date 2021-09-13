@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -6,10 +6,17 @@ import textProps from "../styles/textStyle";
 import { outline } from "../styles/borderStyle";
 import { testApi } from "../shared/api";
 
-const ResultTable = ({ resultList, handleSelectSubRow, checkedState }) => {
+const ResultTable = ({
+    resultList,
+    handleSelectSubRow,
+    checkedState,
+    handleResetSelection,
+}) => {
     const [isFetching, setIsFetching] = useState(false); // data 요청중  판별 값
     const [subData, setSubData] = useState([]); // SubRow 데이터 배열
     const [showSubRow, setShowSubRow] = useState(null);
+
+    useEffect(() => {}, [checkedState]);
 
     // 서브 테이블 데이터 요청 함수
     const handleSubTableReq = async (e) => {
@@ -54,6 +61,7 @@ const ResultTable = ({ resultList, handleSelectSubRow, checkedState }) => {
     };
     return (
         <Table>
+            {console.log(checkedState)}
             <thead>
                 <TableTitleRow>
                     <TableHeader>Name</TableHeader>
@@ -116,6 +124,17 @@ const ResultTable = ({ resultList, handleSelectSubRow, checkedState }) => {
                                                 </SubTableCell>
                                             </SubTableRow>
                                         ))}
+                                    <CheckboxUtilContainer>
+                                        <UtilButton isClear={false}>
+                                            check all
+                                        </UtilButton>
+                                        <UtilButton
+                                            isClear={true}
+                                            onClick={handleResetSelection}
+                                        >
+                                            clear
+                                        </UtilButton>
+                                    </CheckboxUtilContainer>
                                 </>
                             )}
                         </React.Fragment>
@@ -157,6 +176,7 @@ const Name = styled.span`
     width: 80px;
     display: inline-block;
     cursor: pointer;
+    border-radius: 20px;
     ${outline("1px solid", "green")};
     ${textProps(12, "semiBold", "green")};
 `;
@@ -176,6 +196,23 @@ const ID = styled.span`
 `;
 
 const Checkbox = styled.input``;
+
+const CheckboxUtilContainer = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const UtilButton = styled.button`
+    width: 70px;
+    height: 25px;
+    margin-top: 5px;
+    border-radius: 20px;
+    background-color: transparent;
+    ${(props) => textProps(12, "semiBold", props.isClear ? "red" : "purple")}
+    ${(props) => outline("1.5px solid", props.isClear ? "red" : "purple")}
+`;
 
 ResultTable.propTypes = {
     resultList: PropTypes.array,
