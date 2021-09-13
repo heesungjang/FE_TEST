@@ -8,10 +8,13 @@ import ResultTable from "../Components/ResultTable";
 
 const Result = (props) => {
     const [resultList, setResultList] = useState([]); // result List state 값
+    const [searchResult, setSearchResult] = useState([]);
     const [searchTerm, setSearchTerm] = useState(""); // 검색 input 입력 값 control state
 
     const [isFetching, setIsFetching] = useState(false); // 데이터 요청이 끝났는지 판별하는 boolean 값
     const [errorMessage, setErrorMessage] = useState(""); // 서버 통신 에러 메세지
+
+    const [checkedState, setCheckedState] = useState([]); // SubRow 선택 판별 배열 값
 
     // 전체 결과 (result) 서버 데이터 요청  함수
     const getResults = async () => {
@@ -32,39 +35,65 @@ const Result = (props) => {
 
     // input value 헨들러
     const handleOnChange = (e) => {
-        const {
-            target: { value: searchTerm },
-        } = e;
-        if (searchTerm) {
-            setSearchTerm(searchTerm);
+        // 입력 값
+        const searchTerm = e.target.value;
+
+        // white space(띄어쓰기) regex
+        const regexp = /^\S*$/;
+
+        // 띄어쓰기 입력시 alert 처리
+        if (!regexp.test(searchTerm)) {
+            return window.alert("띄어쓰기는 지원하지 않습니다.");
         }
+        // 입력 값 컨트롤
+
+        setSearchTerm(searchTerm);
     };
 
     // 검색 버튼 헨들러
     const handleOnSearch = async () => {
-        // white space(띄어쓰기) regex
-        const regexp = /^\S*$/;
-        // 검색어가 없거나 검색어에 띄어쓰기가 포함된 경우 alert 처리
+        // 검색어가 없는 경우 alert 처리
         if (searchTerm === "") {
             return window.alert("검색어를 입력해주세요.");
         }
-        if (!regexp.test(searchTerm)) {
-            return window.alert("띄어쓰기는 지원하지 않습니다.");
-        }
 
         // 검색 결과 필터링, 사용가자 입력한 search term으로 현재 state 배열 필터
-        setResultList(
+        setSearchResult(
             resultList.filter(
                 (mainRowData) =>
                     mainRowData[0].toLowerCase() === searchTerm.toLowerCase()
             )
         );
+
+        // search term 값 초기화
+        setSearchTerm("");
     };
 
     // 검색창 enter key press 헨들러
     const handleOnEnter = (e) => {
         if (e.key === "Enter") {
             handleOnSearch();
+        }
+    };
+
+    // sub row 데이터 선택 헨들러
+    const handleSelectSubRow = (e) => {
+        const filter = checkedState.find(
+            (row) =>
+                row.name === e.target.value && row.selectedRow === e.target.id
+        );
+        if (filter !== undefined) {
+            setCheckedState(checkedState.filter((row) => row !== filter));
+            return;
+        } else {
+            setCheckedState((prev) => [
+                ...prev,
+                {
+                    name: e.target.value,
+                    selectedRow: e.target.id,
+                    selected: true,
+                },
+            ]);
         }
     };
 
@@ -76,10 +105,12 @@ const Result = (props) => {
     return (
         <LayoutContainer>
             <SearchBoxContainer>
+                {console.log(checkedState)}
                 <Title>Result</Title>
                 <UnitContainer>
                     <SearchUnit>
                         <SearchInput
+                            value={searchTerm}
                             placeholder="Search by name"
                             onChange={handleOnChange}
                             onKeyPress={handleOnEnter}
@@ -91,7 +122,27 @@ const Result = (props) => {
                     <DownloadButton>download</DownloadButton>
                 </UnitContainer>
             </SearchBoxContainer>
-            <ResultTable resultList={resultList} />
+            <>
+                {checkedState.length > 0 && (
+                    <SelectionTitle>Data Selection</SelectionTitle>
+                )}
+                {checkedState.length > 0 &&
+                    checkedState.map((row, idx) => (
+                        <SubRowSelectionContainer>
+                            <SelectedRowItem>{`${row.name} - ${row.selectedRow}`}</SelectedRowItem>
+                            <DeleteButton>
+                                <span>X</span>
+                            </DeleteButton>
+                        </SubRowSelectionContainer>
+                    ))}
+            </>
+            {/* 결과 데이터 테이블 컴포넌트 */}
+            <ResultTable
+                resultList={searchResult.length > 0 ? searchResult : resultList}
+                handleSelectSubRow={handleSelectSubRow}
+                setCheckedState={setCheckedState}
+                checkedState={checkedState}
+            />
         </LayoutContainer>
     );
 };
@@ -104,6 +155,7 @@ const LayoutContainer = styled.div`
 // 검색 input + Result title 컨테이너
 const SearchBoxContainer = styled.div`
     display: flex;
+    background-color: white;
     align-items: end;
     padding-bottom: 35px;
     justify-content: space-between;
@@ -112,7 +164,7 @@ const SearchBoxContainer = styled.div`
 
 // Result 타이틀
 const Title = styled.span`
-    ${textProps(30, "semiBold", "black")};
+    ${textProps(30, "semiBold", "black")}
 `;
 
 const UnitContainer = styled.div`
@@ -152,6 +204,36 @@ const DownloadButton = styled.button`
     background-color: transparent;
     ${outline("1.2px solid", "purple")}
     ${textProps(14, "regular", "darkPurple")};
+`;
+
+//--------------Sub Row selection---------------
+
+const SubRowSelectionContainer = styled.div`
+    width: 150px;
+    margin: 20px 0 0 10px;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const SelectedRowItem = styled.span`
+    ${textProps(16, "regular", "darkGray")}
+`;
+
+const DeleteButton = styled.button`
+    transition: 150ms;
+    background-color: transparent;
+    span {
+        ${textProps(18, "regular", "darkGray")}
+    }
+    :hover {
+        transform: rotate(20deg);
+    }
+`;
+
+const SelectionTitle = styled.span`
+    display: inline-block;
+    margin: 10px 0 0 10px;
+    ${textProps(14, "semiBold", "green")};
 `;
 
 export default Result;
