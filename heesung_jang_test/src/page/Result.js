@@ -97,6 +97,18 @@ const Result = (props) => {
         }
     };
 
+    // // 데이터 선택 취소  버튼
+    const handleCancelButton = (name, position) => {
+        const filter = checkedState.find(
+            (row) => row.name === name && row.selectedRow === position
+        );
+        if (filter !== undefined) {
+            return setCheckedState(
+                checkedState.filter((row) => row !== filter)
+            );
+        }
+    };
+
     // 랜더링시 항상 getResult 함수를 실행, 전체 result 값을 받아온다.
     useEffect(() => {
         getResults();
@@ -130,7 +142,14 @@ const Result = (props) => {
                     checkedState.map((row, idx) => (
                         <SubRowSelectionContainer>
                             <SelectedRowItem>{`${row.name} - ${row.selectedRow}`}</SelectedRowItem>
-                            <DeleteButton>
+                            <DeleteButton
+                                onClick={() =>
+                                    handleCancelButton(
+                                        row.name,
+                                        row.selectedRow
+                                    )
+                                }
+                            >
                                 <span>X</span>
                             </DeleteButton>
                         </SubRowSelectionContainer>
